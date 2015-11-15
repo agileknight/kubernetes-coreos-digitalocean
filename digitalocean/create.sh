@@ -1,14 +1,11 @@
 #!/bin/bash
 
-# copy .env.default to .env and fill in missing values
-source .env
-
 function createVm {
 	NAME=$1
 
 	curl --request POST "https://api.digitalocean.com/v2/droplets" \
      --header "Content-Type: application/json" \
-     --header "Authorization: Bearer $TOKEN" \
+     --header "Authorization: Bearer $DIGITALOCEAN_API_KEY" \
      --data '{"region":"'"${REGION}"'",
         "image":"coreos-beta",
 	"private_networking":true,

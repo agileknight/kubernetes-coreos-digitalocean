@@ -1,5 +1,6 @@
-kubectl:
+manage-cluster:
   build: .
+  env_file: .env
   environment:
     MASTER_HOST: 46.101.187.209
   volumes:

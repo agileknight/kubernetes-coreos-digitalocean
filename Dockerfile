@@ -6,10 +6,16 @@ RUN apt-get update && \
 
 WORKDIR /opt
 
-RUN ARCH=linux; wget https://storage.googleapis.com/kubernetes-release/release/v1.0.6/bin/${ARCH}/amd64/kubectl && \
+RUN wget https://storage.googleapis.com/kubernetes-release/release/v1.0.6/bin/linux/amd64/kubectl && \
   chmod +x kubectl && \
-  mv kubectl /usr/local/bin/kubectl
+  mv kubectl /usr/local/bin/
 
-ADD configure-kubectl.sh /opt/
+RUN wget https://github.com/digitalocean/doctl/releases/download/0.0.16/linux-amd64-doctl.tar.bz2 && \
+  tar xvf linux-amd64-doctl.tar.bz2 && \
+  rm linux-amd64-doctl.tar.bz2 && \
+  chmod +x doctl && \
+  mv doctl /usr/local/bin/
 
-CMD /opt/configure-kubectl.sh; bash
+ADD digitalocean /opt/digitalocean
+
+CMD bash
