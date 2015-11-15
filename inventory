@@ -1,0 +1,19 @@
+[coreos]
+kube-master       ansible_ssh_host=46.101.187.209
+kube-slave01      ansible_ssh_host=46.101.186.198
+kube-slave02      ansible_ssh_host=46.101.184.188
+
+[coreos:vars]
+ansible_ssh_user=core
+ansible_become=yes
+ansible_python_interpreter="PATH=/root/bin:$PATH python"
+
+[master]
+kube-master
+
+[slave]
+kube-slave01
+kube-slave02
+
+[slave:vars]
+master_host=46.101.187.209

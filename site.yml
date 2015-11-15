@@ -1,0 +1,4 @@
+---
+- include: bootstrap.yml
+- include: kubernetes-master.yml
+- include: kubernetes-slave.yml

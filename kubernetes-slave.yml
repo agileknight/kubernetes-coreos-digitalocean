@@ -1,0 +1,42 @@
+---
+- hosts: slave
+  tasks:
+  - name: create ssl dir
+    file: path=/etc/kubernetes/ssl state=directory owner=root group=root
+  - name: copy tsl certificates
+    copy: src=gen-certs/certs/{{ item }} dest=/etc/kubernetes/ssl/{{ item }} owner=root group=root mode=0400
+    with_items:
+      - ca.pem
+      - worker.pem
+      - worker-key.pem
+  - name: create flannel run dir
+    file: path=/run/flannel state=directory
+  - name: write flannel options
+    template: src=flannel/options.env.j2 dest=/run/flannel/options.env
+  - name: create flannel unit drop-in dir
+    file: path=/etc/systemd/system/flanneld.service.d state=directory
+  - name: write flannel etcd config drop-in
+    copy: src=flannel/40-etcd-config.conf dest=/etc/systemd/system/flanneld.service.d/40-etcd-config.conf
+    notify:
+     - reload systemd
+  - name: create docker unit drop-in dir
+    file: path=/etc/systemd/system/docker.service.d state=directory
+  - name: write docker flannel dependency drop-in
+    copy: src=flannel/40-flannel.conf dest=/etc/systemd/system/docker.service.d/40-flannel.conf
+    notify:
+     - reload systemd
+  - name: write worker-kubeconfig
+    copy: src=kubelet/worker-kubeconfig.yaml dest=/etc/kubernetes/worker-kubeconfig.yaml
+  - name: write kubelet unit file
+    template: src=kubelet/kubelet.service.slave.j2 dest=/etc/systemd/system/kubelet.service
+    notify:
+     - reload systemd
+  - name: create pod manifests dir
+    file: path=/etc/kubernetes/manifests state=directory
+  - name: write kube proxy pod manifest
+    template: src=kubelet/kube-proxy.yaml.slave.j2 dest=/etc/kubernetes/manifests/kube-proxy.yaml
+  - name: enable and start kubelet service
+    service: name=kubelet enabled=yes state=started
+  handlers:
+  - name: reload systemd
+    command: systemctl daemon-reload

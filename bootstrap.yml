@@ -1,0 +1,4 @@
+- hosts: coreos
+  gather_facts: false
+  roles:
+    - defunctzombie.coreos-bootstrap

@@ -1,0 +1,24 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+
+[Service]
+EnvironmentFile=/etc/environment
+Environment=KUBELET_OPTS=
+
+ExecStart=/usr/bin/kubelet \
+  --api_servers=http://127.0.0.1:8080 \
+  --register-node=false \
+  --allow-privileged=true \
+  --config=/etc/kubernetes/manifests \
+  --hostname-override=${COREOS_PRIVATE_IPV4} \
+  --cluster_dns=10.3.0.10 \
+  --cluster_domain=cluster.local \
+  --cadvisor-port=0 \
+  $KUBELET_OPTS
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,7 @@
+kubectl:
+  build: .
+  environment:
+    MASTER_HOST: 46.101.187.209
+  volumes:
+    - ./gen-certs/certs:/opt/certs
+
