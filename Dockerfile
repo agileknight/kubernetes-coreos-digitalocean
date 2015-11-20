@@ -16,6 +16,10 @@ RUN wget https://github.com/digitalocean/doctl/releases/download/0.0.16/linux-am
   chmod +x doctl && \
   mv doctl /usr/local/bin/
 
+RUN wget https://raw.githubusercontent.com/tests-always-included/mo/master/mo && \
+  chmod +x mo && \
+  mv mo /usr/local/bin/
+
 ADD digitalocean /opt/digitalocean
 
 CMD bash
