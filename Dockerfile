@@ -20,6 +20,21 @@ RUN wget https://raw.githubusercontent.com/tests-always-included/mo/master/mo &&
   chmod +x mo && \
   mv mo /usr/local/bin/
 
+RUN apt-get update && \
+  apt-get install -y python python-pip && \
+  apt-get clean
+
+RUN pip install dopy mock && \
+  wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/digital_ocean.py && \
+  chmod +x digital_ocean.py && \
+  mv digital_ocean.py /usr/local/bin/
+
+RUN apt-get update && \
+  apt-get install -y ansible && \
+  apt-get clean
+
 ADD digitalocean /opt/digitalocean
 
-CMD bash
+ADD bash-with-env.sh /opt/bash-with-env.sh
+
+CMD /opt/bash-with-env.sh
