@@ -41,6 +41,18 @@ RUN wget -O terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_
   unzip terraform.zip -d /usr/local/bin && \
   rm terraform.zip
 
+ENV GOLANG_VERSION 1.5.2
+ENV GOROOT /usr/local/go
+ENV PATH=$PATH:$GOROOT/bin
+RUN wget -O golang.tar.gz https://storage.googleapis.com/golang/go${GOLANG_VERSION}.linux-amd64.tar.gz && \
+  tar -C /usr/local -xzf golang.tar.gz && \
+  rm golang.tar.gz
+
+ENV GOPATH /opt/gopath
+ENV PATH=$PATH:$GOPATH/bin
+RUN go get github.com/paperg/terraform-provider-etcdiscovery && \
+  mv /opt/gopath/bin/terraform-provider-etcdiscovery /usr/local/bin
+
 ADD digitalocean /opt/digitalocean
 
 ADD bash-with-env.sh /opt/bash-with-env.sh
