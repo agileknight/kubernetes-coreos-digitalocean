@@ -33,6 +33,14 @@ RUN apt-get update && \
   apt-get install -y ansible && \
   apt-get clean
 
+ENV TERRAFORM_VERSION 0.6.8
+RUN apt-get update && \
+  apt-get install -y wget unzip && \
+  apt-get clean
+RUN wget -O terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+  unzip terraform.zip -d /usr/local/bin && \
+  rm terraform.zip
+
 ADD digitalocean /opt/digitalocean
 
 ADD bash-with-env.sh /opt/bash-with-env.sh
