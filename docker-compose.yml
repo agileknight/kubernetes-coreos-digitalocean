@@ -5,4 +5,5 @@ manage-cluster:
     MASTER_HOST: 46.101.187.209
   volumes:
     - ./gen-certs/certs:/opt/certs
+    - ./digitalocean:/opt/digitalocean
 
